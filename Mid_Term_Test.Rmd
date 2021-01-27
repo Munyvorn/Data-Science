@@ -1,0 +1,232 @@
+1. Write a R code to Generate 6X6 matrix (A) using the random numbers between 1 to 100
+&amp; generate another 6x6 matrix (B) using random numbers between 500 to 600.
+```{r}
+# Generate Matrix A and B
+
+# Generate 36 random numbers for matrix A
+a = floor(runif(36, min=1, max=100))
+# Create Matrix A
+A = matrix(a, 6, 6)
+A
+# Generate 36 random numbers for matrix B
+b = floor(runif(36, min=500, max=600))
+# Create Matrix A
+B = matrix(b, 6, 6)
+B
+
+```
+a. Find the range of matrices A and B.
+b. Find the max value from each row of the matrices A and B.
+c. Find the diagonal values of matrices A&amp;B.
+d. Multiply matrices A and B
+e. Replace the 4th row of Matrix A with diagonal values of matrix B
+f. Multiply matrices A &amp; B and store the values on X.
+g. Divide the matrix A with matrix B.
+```{r}
+# a. Find Range of matrices
+
+## range of matrix A
+i = 0
+while(i <=6){
+  print(A[,i])
+  i = i+1
+}
+## range of matrix B
+i = 0
+while(i <=6){
+  print(B[,i])
+  i = i+1
+}
+
+# b. Find max value of each row
+# Matrices A
+i= 1
+print("Max value of each row of Matrix A")
+while(i <=6){
+  print(max(A[i,]))
+  i = i+1
+}
+
+print("Max value of each row of Matrix B")
+i = 0
+while(i <= 6){
+  print(max(B[i,]))
+  i = i+1
+}
+
+#c. Find Diagonal values
+diag(A)
+diag(B)
+
+#d. Multiply Matrix A and B 
+A %o% B
+
+#e. Replace 4th row of A with Diagonal value of B
+A[4,] <- diag(B)
+A
+
+#f. Multiply matrices A &amp; B and store the values on X.
+X = A %o% B
+X
+
+#g. Divide the matrix A with matrix B.
+invB = solve(B)
+division = A * invB
+division
+```
+
+2. Create a table using dataframe/tibble with the following categories(a to f)
+a. First name,
+b. Second Name,
+c. Age,
+d. Occupation,
+e. Place,
+f. Random numbers( between 1 to 10)
+```{r}
+# Create 10 observations
+firstname <- c("Chea", "Kim", "muny", "Ley", "Sreng", "Sok", "Sao", "Som", "Hok", "Lay")
+secondname <- c("Vorn", "Teng", "Lim", "Sovann", "Vuthy", "Nara", "Seng", "Ly", "Kimghak", "King")
+age <- c(20, 21, 23, 40, 19, 19, 35, 20, 25, 21)
+occupation <- c("Student", "Student", "Student", "Teacher", "Student", "Student", "Teacher", "Student", "Student", "Student")
+place <- c("KIT", "Phnom Penh", "KIT", "KIT", "Phnom Penh", "KIT", "Phnom Penh", "KIT", "KIT", "KIt")
+# generate 10 random numbers
+rannum <- floor(runif(10, min=1, max=10))
+
+# Create the dataframe
+mydata <- data.frame(FirstName = firstname, SecondName = secondname, Age=age, Occupation = occupation, Place = place, randomnum = rannum  )
+mydata 
+```
+g. Extract the last column (f)
+h. Find the sum, mean and length of the extracted column
+```{r}
+# g. extract the last column (f)
+library(dplyr)
+lastcol = transmute(mydata, randomnum)
+lastcol
+# h. Find sum, mean, length of the extract column
+## sum
+sum(lastcol)
+## mean
+mean(unlist(lastcol))
+## length
+length(lastcol)
+count(lastcol)
+
+```
+3. Create a .txt file (Minimum : 150 words) with the latest news (In English) in cambodia from
+the official news agency’s website(Note: Include the reference link) and do the following
+a. Read the .txt file
+b. Perform the Tokenization &amp; count the words
+c. Identify the most repeated word and replace that word with “KIT”
+d. Perform the Sentiment analysis
+e. Plot the graph between “words count” and “words” using geom_col()
+
+e.1. X-axis title =“Number of words”, Size=10, Bold, Text in Blue color,
+Center, space between graph and title = 20.
+
+e.2. Y-axis title =“List of words”, Size=10, Bold, Text in Red color,
+Center, space between graph and title = 20.
+e.3. Graph title =”Text Mining using R”,Size = 25, Bold, Center, Text in
+Yellow color, space between graph and title = 25.
+
+```{r}
+# reference link: https://www.phnompenhpost.com/national-post-depth/economic-woes-back-home-migrants
+# a. Read the .txt file
+news_data <- read.delim("C:/Users/KIT/Documents/R/khmer_news.txt", header=F)
+news_data
+
+```
+```{r}
+# b. perform tokenization and count the words
+library(tidytext) # for tokenization
+library(ggplot2) # for graph visualization
+library(dplyr)
+dataset <- data.frame(S.No=1, Text=as.vector(news_data))
+dataset
+dataset %>% 
+  unnest_tokens(Info, Text) %>%
+  count(Info, sort=TRUE) %>% 
+  ggplot(aes(n, Info)) + geom_col() # plot the graph using ggplot2
+
+```
+
+```{r}
+# C. Find the most frequent word and replace it with "KIT"
+
+```
+
+
+```{r}
+# d. Perform sentiment analysis 
+
+library(pacman)
+pacman::p_load(sentimentr)
+
+num <- 1:7
+paragraph <- c("A", "B", "C", "D", "E", "F", "G")
+table <-data.frame(V1=news_data, Num=num, Title=paragraph)
+table
+
+result1<- sentimentr::sentiment(table$V1) # To know number of sentences and words(Sentiment at the sentence level)
+result1
+result2 <-sentiment_by(table$V1) # Total number of words
+result2
+result3<- get_sentences(table) # To display the sentences
+result3
+result4<- emotion(table$V1) # Emotion at the sentence level
+result4
+result5<- emotion_by(table$V1) # Aggregated emotion by group(s)
+result5
+result6<- profanity(table$V1) # Profanity at the sentence level
+result6
+result7<- profanity_by(table$V1) # Aggregated profanity by group(s)
+result7
+```
+
+4. Find the assigned Dataset from the list below and perform the following (20 Marks)
+a. Import and Clean the dataset.
+b. Find the x and y variables(axis) from the assigned dataset and give the reason for
+selecting the x and y axis.
+c. Plot the graph using geom_col() and perform the linear model in statistics.
+d. Perform the facet with the available columns(Choose the any two variables from the
+columns)
+e. Use the theme layer to do the following (Note: Based on dataset, name the x and y axis &amp;
+graph)
+e.1. x-axis title =“________”, Size=10, Bold, Text in Green color, Center, space
+between graph and title = 20.
+e.2. y-axis title =“________”, Size=10, Bold, Text in Yellow color, Center, space
+between graph and title = 20.
+e.3. Graph title =”_________”,Size = 25, Bold, Center, Text in Blue color, space
+between graph and title = 25.
+```{r}
+# a. Import data and clean it
+data <- read.csv("C:/Users/KIT/Documents/R/drinks.csv")
+data
+```
+
+
+b. Find x and y
+- x variable is "country": because it mainly acts as the key identifer and give the information of the country that consume a specific amount of alcohol.
+- y variable is "total_litre_of_pure_alcohol": because from this data, we can know which country consume which total amount of alcohol in litres. The graph will match from the country name to the exact total amount of alchohol consumed by the country.
+- From the graph, we can identify which country should we start the alchohol business in, or which country that consume the least amount of alcohol so that we should give less priority. 
+- Also, we can know if the country consume the most amount of alcohol, what are the major problems that occurs in that country accordingly.
+```{r}
+# c. Plot the graph using geom_col() and perform the linear model in statistics.
+library(ggplot2)
+plot <- ggplot(data , mapping = aes(x= country, y=total_litres_of_pure_alcohol)) +
+      geom_point(size=3, alpha) +
+      geom_smooth(method="glm")
+# d. perform facet
+plot <- plot + facet_grid(beer_servings ~ spirit_servings)
+# e. Edit the layer
+plot <- plot + 
+      xlab("Countries") +
+      ylab("Total alchohol consumption") +
+    ggtitle("Worldwide Alcohol Consumption Data") +
+    theme(axis.title.x=element_text(size=15, color="green", face="bold", margin=margin(t=20,r=20,b=0,l=0)),
+          axis.title.y=element_text(size=15, color="yellow", face="bold", margin=margin(t=0,r=20,b=0,l=20)),
+          plot.title=element_text(size=15, color="blue", face="bold", margin=margin(t=20,r=0,b=25,l=0)))
+```
+
+
+
